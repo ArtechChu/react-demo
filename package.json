@@ -1,23 +1,16 @@
 {
   "name": "react-demo",
-  "version": "1.0.0",
-  "description": "> react 官网：https://reactjs.org/\r >\r > 先决条件：安装nodejs，[官网](https://nodejs.org/en/)\r >\r > 本次教程基于环境、使用工具、版本：\r >\r > ​\tnodejs：8.11.3\r >\r > ​\treact：16.4.1\r >\r > ​\tnpm：6.1.0",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "create-react-app": "^1.5.2"
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ArtechChu/react-demo.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ArtechChu/react-demo/issues"
-  },
-  "homepage": "https://github.com/ArtechChu/react-demo#readme"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
 }
