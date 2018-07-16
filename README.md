@@ -6,9 +6,10 @@
 >
 > 本次教程基于环境、使用工具以及版本：
 >
-> 	- *nodejs：8.11.3*
+> - *nodejs：8.11.3*
 > - *react：16.4.1*
-> 	- *npm：6.2.0*
+> - *npm：6.2.0*
+> - *SPA（单页应用）*
 
 # 1.创建项目
 
@@ -34,8 +35,19 @@ create-react-app react-demo
 
 - /public/index.html是整个项目的入口文件，我们可以在该文件中添加一些CDN资源，如jQuery等。
 
-  > P.S.：在index.html中，有一个根容器：<div id="root"></div> 
-  >
+  - index.html文件内容
+
+    ![index.html内容](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180716143525133-52651282.png)
+
+    >P.S.：在index.html中，有一个根容器：<div id="root"></div> ，这个是整个项目的总容器，创建的组件最终都生成在该容器中。
+    >
+    >对于该文件，一般情况下，我们不会在这个html文件中增加我们的业务代码
+
+  - *额外说明：在对项目进行解包后，在webpack的配置中，脚手架将src/index.js作为了整个项目的入口文件，如下图：*
+
+    ![解包后入口文件配置](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180716143041900-1455397530.png)
+
+    
 
 - src文件夹：
 
@@ -43,12 +55,23 @@ create-react-app react-demo
 
   ![index.js](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180713144814373-1366441329.png)
 
+  	>在这里，可以将 <App />认为是整个项目的根组件，要使用App组件，需要引入该组件，见L4（第四行）：通过  ***import App from './App'***  进行引用，默认情况下，webpack自动将文件作为js文件进行处理，所以这里在引入App.js的时候，不用显示指明 "./App.js"
 
+  
 
-# 2.JSX语法
+# 3.JSX语法
 
-创建的react项目中的js，默认使用了JSX语法
+脚手架创建的react项目中的App.js，默认使用了JSX语法
 
 JSX语法与非JSX语法对比：
 
 ![JSX语法与非JSX语法对比](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180716141903506-640158671.png)
+
+> 以上两个文件，最终编译后的效果是一样的，但右边的JSX语法提供了语法糖，可以让我们更加直观的书写代码，层次结构更为清晰。
+
+## JSX语法的一些简单说明
+
+### JSX中使用自定义属性
+
+
+
