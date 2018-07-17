@@ -1,4 +1,4 @@
-# React 基础使用demo，based on React.16.4.1
+# 1. React 基础使用demo，based on React.16.4.1
 
 > react 官网：https://reactjs.org/
 >
@@ -11,21 +11,21 @@
 > - *npm：6.2.0*
 > - *SPA（单页应用）*
 
-# 1.创建项目
+# 2. 创建项目
 
-## 1.1 安装 create-react-app
+## 2.1. 安装 create-react-app
 
 ```shell
 npm install -g create-react-app@2.0.0-next.3e165448
 ```
 
-## 1.2 创建react项目
+## 2.2. 创建react项目
 
 ```shell
 create-react-app react-demo
 ```
 
-# 2.项目结构说明
+# 3. 项目结构说明
 
 创建好之后的项目结构
 
@@ -59,7 +59,7 @@ create-react-app react-demo
 
   
 
-# 3.JSX语法
+# 4. JSX语法
 
 脚手架创建的react项目中的App.js，默认使用了JSX语法
 
@@ -146,12 +146,12 @@ JSX语法的一些简单说明：
     }
     ```
 
-# 4.Component：组件
+# 5. Component：组件
 最简单的一个组件例子：
 在项目src文件夹中，创建如下目录和文件：
 ![Students组件](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180716181108312-525461363.png)
 
-## 创建自定义组件：Student.js
+## 5.1. 创建自定义组件：Student.js
 ```js
   import React from  'react' //如果要用到JSX语法，就需要导入react
   function Student(){
@@ -159,7 +159,7 @@ JSX语法的一些简单说明：
   }
   export default Student;
 ```
-## 在App.js中使用自定义组件
+## 5.2. 在App.js中使用自定义组件
 ```js
 import React, { Component } from 'react';
 import './App.css';
@@ -181,16 +181,19 @@ export default App;
 2.在引入自定义组件的时候，必须使用相对路径，否则会被认为是通过npm/yarn等安装的包。
 
 在本例中，页面文件、组件的加载顺序为：
-```mermaid
-graph TD;
-    index.html启动-->渲染index.html;
-    渲染index.html-->加载index.js
-    加载index.js-->加载App.js;
-    加载App.js-->渲染App组件;
-    渲染App组件-->加载Student组件;
-    加载Student组件-->渲染Student组件;
-    渲染Student组件-->Student组件渲染完成;
-    Student组件渲染完成-->App组件渲染完成;
-    App组件渲染完成-->index.html渲染完成;
+``` sequence
+Title:页面加载时序图
+Note over index.html:页面开始加载
+index.html->index.js: 加载index.js
+Note over index.js:开始执行
+index.js->App.js: 加载App组件
+Note over App.js:开始执行
+App.js->Student.js: 加载Student组件
+Note over Student.js:执行js代码
+Student.js--> App.js:Student组件渲染完成
+Note over App.js:继续执行App组件其他代码
+App.js--> index.js:Student组件渲染完成
+Note over index.js:继续执行其他代码
+index.js--> index.html:index.js加载完成
+Note over index.html:继续执行其他代码
 ```
-
