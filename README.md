@@ -145,6 +145,33 @@ JSX语法的一些简单说明：
       );
     }
     ```
+6.jsx中，属性事件
+- 命名上，类似于camel命名，如：
+```html
+<button onClick="XXXXX">button</button>
+这里在定义点击事件的时候，不再是全小写的“onclick”，而是“onClick”--- C 大写
+```
+- 事件使用
+``` js
+假设在声明了如下方法：
+  //无参方法
+  sayHello(){
+    console.log("say hello");
+  }
+  //带参方法
+  sayHelloTo(name) {
+    console.log("hello  " + name);
+  }
+通过按钮点击事件使用 sayHello方法
+  <div><button onClick={this.sayHello} >button</button></div>
+```
+>在调用方法的时候，需要注意以下几点：
+>  1. 若调用的方法不带参数，如 sayHello：
+>     - 若调用时方法上带上了圆括号，如 onClick={this.sayHello()}，则在页面加载的时候，该方法会自动执行一遍。
+>     - 若调用时没有带圆括号，如 onClick={this.sayHello}，则页面加载的时候，该方法不会自动执行，需要点击该按钮后才会被执行。
+>  2. 若调用的方法带参数，如 sayHelloTo：
+>     - 若调用方式为：onClick={this.sayHelloTo('Lucy')}，则页面加载的时候，该方法就自动执行，且之后按钮再怎么点击也无效
+> ======================??????============
 
 # 5. Component：组件
 最简单的一个组件例子：
@@ -197,31 +224,129 @@ Note over index.js:继续执行其他代码
 index.js--> index.html:index.js加载完成
 Note over index.html:继续执行其他代码
 ```
-## 5.3 通过props传值
-props是react内置的，可以直接在组件中作为入参。
+## 5.3 props
+props是react内置的，可以直接在组件中作为入参来进行使用。
+>props用于数据的单向传递，主要是用来在组件间传值的。
+
 Student.js
 ```js
 import React from  'react'
 function Student(props){
-    return <p>大家好，我是学生{props.name}</p>
+    return <div>
+            <p>大家好，我是{props.name}，班级：{props.class}。{props.children}</p>            
+            </div>
 }
 export default Student;
 ```
 使用
+```js
+App.js
+    import Student from './Components/Student/Student'; //1.引入组件
+    class App extends Component {
+      render() {
+        return (      
+          <div className="App">
+          <h1>demo</h1>
+            <Student name="学生A" class="Class_1"/>   //2.使用
+            <Student name="学生B" class="Class_4"/>
+            <Student name="学生C" class="Class_3">
+              <span style={{color:"red"}}>目前是打酱油的</span>
+            </Student>
+          </div>
+        );
+      }
+    }
+```
+在Student.js中通过props使用的属性，在调用方需要以"属性元素"的形式来使用，如这里的：
 ```html
+<!--这里的name对应props.name，class对应props.class-->
+<Student name="学生A" class="Class_1"/>  
+<Student name="学生B" class="Class_4"/>
+<Student name="学生C" class="Class_3">
+  <!--这里的span在Student标签内声明，对应props.children-->
+  <span style={{color:"red"}}>目前是打酱油的</span>  
+</Student>
+```
+效果图：
+![props使用效果图](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180718172739719-612768523.png)
+
+## 5.4 state
+state：主要用来动态改变组件内容的值。一般通过一些事件（如点击事件）来对现有的值进行改变。
+***state是定义在Component中的一个属性，所以只能在class中使用，且该类必须要继承 Component,定义如下***
+![state在Component中的定义](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180718164253360-1956049745.png)
+### 定义state
+App.js
+```js
+import React, { Component } from 'react';
+
+class App extends Component {
+  state = {
+    students: [
+      { name: "学生A", class: "class_1" },
+      { name: "学生B", class: "class_4" },
+      { name: "学生C", class: "class_3" }
+    ],
+    grade: "Grade One"
+  }
+  ...
+}
 
 ```
 
+### 使用state
+```js
+class App extends Component {
+  ...
+  state = {
+    students: [
+      { name: "A", class: "class_1" },
+      { name: "B", class: "class_4" },
+      { name: "C", class: "class_3" }
+    ],
+    grade: "Grade One"
+  }
+  ...
+  render() {
+    return (
+      <div className="App">
+        <h1>demo</h1>
+        <h2>Grade:{this.state.grade}</h2>
+        <Student name={this.state.students[0].name} class={this.state.students[0].class} />
+        <Student name={this.state.students[1].name} class={this.state.students[1].class} />
+        <Student name={this.state.students[2].name} class={this.state.students[2].class}>
+          <span style={{ color: "red" }}>目前是打酱油的。</span>
+        </Student>
+        <div><button onClick={this.changeName} >button</button></div>
+      </div>
+    );
+  }
+  ...
+}
+```
+>这里的 this 指向的是当前 class
+### 修改state
+对于state中的内容，没有办法直接修改，如：this.state.students[0].name="haha";编译器会给出错误提示，如下：
+![直接修改state内容错误提示](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180718170833727-783273299.png)
+根据提示，无法直接修改state，需使用 setState()进行更改（该方法同样是定义在Component中）
+App.js
+```js
+  changeGrade=()=> {
+    this.state.grade="Grade Two";
+  }
+  调整为：
+  changeGrade=()=> {
+    this.setState({
+      grade: "Grade Two"
+    })
+  }
+```
+>注意，**这里的方法定义使用的是ES6语法**，所以this指向的是当前类，如果用非ES6语法，如：
+![非ES6语法，this指代的是window对象](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180718174705322-60008040.png)
+>这样是会报错的，提示setState方法未定义，此时的this指代的是window
 
 
 
-
-
-
-
-
-
-#其他
+# 其他
 ## 在create-react-app项目中使用HMR
 通过react-hot-loader实现HMR，本文演示时版本为 4.0.0
 安装
