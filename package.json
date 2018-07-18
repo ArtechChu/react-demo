@@ -51,7 +51,9 @@
   },
   "description": "React.16.4.1 basic demo.",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "react-hot-loader": "^4.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ArtechChu/react-demo.git"

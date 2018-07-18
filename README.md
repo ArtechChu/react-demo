@@ -55,7 +55,7 @@ create-react-app react-demo
 
   ![index.js](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180713144814373-1366441329.png)
 
-  >在这里，可以将 <App />认为是整个项目的根组件，要使用App组件，需要引入该组件，见L4（第四行）：通过  ***import App from './App'***  进行引用，默认情况下，webpack自动将文件作为js文件进行处理，所以这里在引入App.js的时候，不用显示指明 "./App.js"
+  >在这里，可以将 \<App /> 认为是整个项目的根组件，要使用App组件，需要引入该组件，见L4（第四行）：通过  ***import App from './App'***  进行引用，默认情况下，webpack自动将文件作为js文件进行处理，所以这里在引入App.js的时候，不用显示指明 "./App.js"
 
   
 
@@ -151,7 +151,7 @@ JSX语法的一些简单说明：
 在项目src文件夹中，创建如下目录和文件：
 ![Students组件](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180716181108312-525461363.png)
 
-## 5.1. 创建自定义组件：Student.js
+## 5.1 创建自定义组件：Student.js
 ```js
   import React from  'react' //如果要用到JSX语法，就需要导入react
   function Student(){
@@ -159,7 +159,7 @@ JSX语法的一些简单说明：
   }
   export default Student;
 ```
-## 5.2. 在App.js中使用自定义组件
+## 5.2 在App.js中使用自定义组件
 ```js
 import React, { Component } from 'react';
 import './App.css';
@@ -178,7 +178,7 @@ class App extends Component {
 export default App;
 ```
 >1.约定：为了区分自定义组件和原生html标签，建议在导入组件命名时，使用Pascal命名法。
-2.在引入自定义组件的时候，必须使用相对路径，否则会被认为是通过npm/yarn等安装的包。
+>2.在引入自定义组件的时候，必须使用相对路径，否则会被认为是通过npm/yarn等安装的包。
 
 在本例中，页面文件、组件的加载顺序为：
 ``` sequence
@@ -197,3 +197,60 @@ Note over index.js:继续执行其他代码
 index.js--> index.html:index.js加载完成
 Note over index.html:继续执行其他代码
 ```
+## 5.3 通过props传值
+props是react内置的，可以直接在组件中作为入参。
+Student.js
+```js
+import React from  'react'
+function Student(props){
+    return <p>大家好，我是学生{props.name}</p>
+}
+export default Student;
+```
+使用
+```html
+
+```
+
+
+
+
+
+
+
+
+
+
+#其他
+## 在create-react-app项目中使用HMR
+通过react-hot-loader实现HMR，本文演示时版本为 4.0.0
+安装
+```js
+npm install -D react-hot-loader@next
+```
+官方文档存在问题，根据npm/git文档是无法实现HMR效果的，至于百度出来的结果，不谈了，方式如下：
+直接在项目根组件App.js中引入安装的 react-hot-loader，并调整导出组件的方式即可，如：
+```js
+App.js
+        import { hot } from 'react-hot-loader' //1.引入模块
+        class App extends Component {
+          
+          render() {
+            return (
+              
+              <div className="App">
+              <h1>demo</h1>
+                <Student name="A" class="classaABCDEFG"/>
+                <Student name="B" class="AAA"/>
+                <Student name="C" class="BBBB"/>
+              </div>
+            );
+          }
+        }
+
+        export default hot(module)(App);  //2.调整导出方式
+```
+运行npm start，查看效果
+>注意，因为是在App.js引入HMR，所以HMR只对App.js中的代码以及内嵌的组件'们'有效。
+
+***测试下state是否有状态保持***
