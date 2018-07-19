@@ -24,6 +24,7 @@ class App extends Component {
   }
 
   sayHelloTo(name) {
+    console.log(this.state.grade);
     console.log("hello  " + name);
   }
 
@@ -34,10 +35,10 @@ class App extends Component {
         <h2>Grade:{this.state.grade}</h2>
         <Student name={this.state.students[0].name} class={this.state.students[0].class} />
         <Student name={this.state.students[1].name} class={this.state.students[1].class} />
-        <Student name={this.state.students[2].name} class={this.state.students[2].class}>
+        <Student onChangeGrade={this.changeGrade} name={this.state.students[2].name} class={this.state.students[2].class}>
           <span style={{ color: "red" }}>目前是打酱油的。</span>
         </Student>
-        <div><button onClick={this.changeGrade} >button</button></div>
+        <div><button onClick={this.sayHelloTo.bind(this,"Lucy")} >button</button></div>
       </div>
     );
   }

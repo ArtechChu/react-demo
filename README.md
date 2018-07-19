@@ -171,7 +171,9 @@ JSX语法的一些简单说明：
 >     - 若调用时没有带圆括号，如 onClick={this.sayHello}，则页面加载的时候，该方法不会自动执行，需要点击该按钮后才会被执行。
 >  2. 若调用的方法带参数，如 sayHelloTo：
 >     - 若调用方式为：onClick={this.sayHelloTo('Lucy')}，则页面加载的时候，该方法就自动执行，且之后按钮再怎么点击也无效
-> ======================??????============
+>     - 若想让带参方法不自动执行，方法有两种：
+>       1.通过箭头函数：onClick={()=>this.sayHelloTo("Lucy")}
+>       2.使用bind：onClick={this.sayHelloTo.bind(this,"Lucy")} //第一个参数表示当前指向的对象，这里传的this表示的当前js中定义的class(因为该this是JSX中的this)，第二个参数开始就是调用方法的入参
 
 # 5. Component：组件
 最简单的一个组件例子：
@@ -269,6 +271,47 @@ App.js
 ```
 效果图：
 ![props使用效果图](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180718172739719-612768523.png)
+
+通过属性传递事件
+
+```js
+给Student.js中的 p 标签增加点击事件 onClick
+Student.js
+import React from  'react'
+function Student(props){
+    return <div>
+            <p onClick={props.onChangeGrade}>大家好，我是{props.name}，班级：{props.class}。{props.children}</p>            
+            </div>
+}
+export default Student;
+
+在父组件App.js中，增加onChangeGrade的传入
+App.js
+class App extends Component {
+  ...
+  changeGrade= ()=>{
+    this.setState({
+      grade: "Grade Two"
+    })
+  }
+  ...
+  render() {
+    return (
+      <div className="App">
+        <h1>demo</h1>
+        <h2>Grade:{this.state.grade}</h2>
+        <Student name={this.state.students[0].name} class={this.state.students[0].class} />
+        <Student name={this.state.students[1].name} class={this.state.students[1].class} />
+        {/*增加 onChangeGrade 属性，传入 changeGrade方法 给Student组件*/}
+        <Student onChangeGrade={this.changeGrade} name={this.state.students[2].name} class={this.state.students[2].class}>
+          <span style={{ color: "red" }}>目前是打酱油的。</span>
+        </Student>
+        <div><button onClick={this.sayHelloTo.bind(this,"Lucy")} >button</button></div>
+      </div>
+    );
+  }
+}
+```
 
 ## 5.4 state
 state：主要用来动态改变组件内容的值。一般通过一些事件（如点击事件）来对现有的值进行改变。
