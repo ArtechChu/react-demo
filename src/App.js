@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Student from './Components/Student/Student';
 import { hot } from 'react-hot-loader'
+import { PassThrough } from 'stream';
 class App extends Component {
 
   state = {
@@ -10,7 +11,8 @@ class App extends Component {
       { name: "学生B", class: "class_4" },
       { name: "学生C", class: "class_3" }
     ],
-    grade: "Grade One"
+    grade: "Grade One",
+    showGradeInfo:true
   }
 
   changeGrade= ()=>{
@@ -32,17 +34,42 @@ class App extends Component {
       grade:event.target.value
     })
   }
+  toggleGrade=()=>{
+    this.setState({
+      showGradeInfo: !this.state.showGradeInfo
+    })
+  }
   render() {
+    let gradeInfo = null;
+    if(this.state.showGradeInfo){
+      gradeInfo = <h2>Grade:{this.state.grade}</h2>;
+    }
     return (
       <div className="App">
         <h1>demo</h1>
-        <h2>Grade:{this.state.grade}</h2>
+      {/* 
+      {if(this.state.showGradeInfo){
+          <h2>Grade:{this.state.grade}</h2>
+        }else{
+
+        }} 
+      */}
+
+      {
+        this.state.showGradeInfo? <h2>Grade:{this.state.grade}</h2>:null
+      }
+
+        {/* {
+          gradeInfo
+        } */}
+        
+      
         <Student onGradeChanged={this.onGradeChanged} name={this.state.students[0].name} class={this.state.students[0].class} />
         <Student onGradeChanged={this.onGradeChanged} name={this.state.students[1].name} class={this.state.students[1].class} />
         <Student onGradeChanged={this.onGradeChanged} name={this.state.students[2].name} class={this.state.students[2].class}>
           <span style={{ color: "red" }}>目前是打酱油的。</span>
         </Student>
-        <div><button onClick={this.sayHelloTo.bind(this,"Lucy")} >button</button></div>
+        <div><button onClick={()=>this.toggleGrade()} >button</button></div>
       </div>
     );
   }

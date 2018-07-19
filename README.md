@@ -427,7 +427,7 @@ App.js
 
 #### ???????????????这里用动图代替??????????????????????????????
 
-# 6.如何在react中使用样式
+# 6.改变元素样式
 方法有2种：
   1. 通过 import 导入样式
   2. 在组件中定义样式
@@ -478,6 +478,54 @@ Student.js
 >对于一些CDN样式资源，则可以直接在index.html中引入
 
 
+# 7. 流程控制语句
+## 7.1 条件语句
+demo：通过按钮来隐藏/显示  grade年级信息：
+调整App.js代码，增加方法 toggleGradeInfo
+```js
+class App extends Component {
+
+  state = {
+    students: [
+      { name: "学生A", class: "class_1" },
+      { name: "学生B", class: "class_4" },
+      { name: "学生C", class: "class_3" }
+    ],
+    grade: "Grade One",
+    showGradeInfo:true
+  }
+  ...
+  toggleGrade=()=>{
+    this.setState({
+      showGradeInfo: !this.state.showGradeInfo
+    })
+  }
+  
+  render() {
+    var gradeInfo = null;
+    if(this.state.showGradeInfo){
+      gradeInfo = <h2>Grade:{this.state.grade}</h2>
+    }
+    return (
+      <div className="App">
+        <h1>demo</h1>
+        {
+          gradeInfo
+        }
+        ...
+        <div><button onClick={()=>this.toggleGrade()} >button</button></div>
+      </div>
+    );
+  }
+}
+```
+# ????????这里放gif动图?????????
+>注意：
+> 1. 在JSX中，如果要使用表达式，则需要用花括号括起来，如这里的    {gradeInfo}
+> 2. 在JSX中，无法在花括号中使用 if-else 条件语句，，但可以使用三元表达式代替，具体方法为：
+>   {  this.state.showGradeInfo? \<h2>Grade:{this.state.grade}\</h2>:null  }
+>   当然这里可以直接用上面定义的gradeInfo变量。
+> Tips：个人建议在JSX中尽量少业务逻辑，只放结果，将判断逻辑都抽取到JSX外层，也便于后期提取方法
 
 
 
@@ -485,8 +533,8 @@ Student.js
 
 
 
-
-
+>临时存放【在讲生命周期的时候用】：
+>render方法：只要内容发生变化，该方法都会被执行。
 
 
 
