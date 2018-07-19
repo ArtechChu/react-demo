@@ -23,19 +23,23 @@ class App extends Component {
     console.log("hello");
   }
 
-  sayHelloTo(name) {
-    console.log(this.state.grade);
+  sayHelloTo(name){
     console.log("hello  " + name);
   }
 
+  onGradeChanged= (event)=>{
+    this.setState({
+      grade:event.target.value
+    })
+  }
   render() {
     return (
       <div className="App">
         <h1>demo</h1>
         <h2>Grade:{this.state.grade}</h2>
-        <Student name={this.state.students[0].name} class={this.state.students[0].class} />
-        <Student name={this.state.students[1].name} class={this.state.students[1].class} />
-        <Student onChangeGrade={this.changeGrade} name={this.state.students[2].name} class={this.state.students[2].class}>
+        <Student onGradeChanged={this.onGradeChanged} name={this.state.students[0].name} class={this.state.students[0].class} />
+        <Student onGradeChanged={this.onGradeChanged} name={this.state.students[1].name} class={this.state.students[1].class} />
+        <Student onGradeChanged={this.onGradeChanged} name={this.state.students[2].name} class={this.state.students[2].class}>
           <span style={{ color: "red" }}>目前是打酱油的。</span>
         </Student>
         <div><button onClick={this.sayHelloTo.bind(this,"Lucy")} >button</button></div>

@@ -386,6 +386,113 @@ App.js
 >注意，**这里的方法定义使用的是ES6语法**，所以this指向的是当前类，如果用非ES6语法，如：
 ![非ES6语法，this指代的是window对象](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180718174705322-60008040.png)
 >这样是会报错的，提示setState方法未定义，此时的this指代的是window
+>*建议：个人建议使用ES6语法，减少不必要的错误概率*
+
+### 通过state实现数据的双向绑定
+一般使用input，select，checkbox等拥有输入功能的标签来实现，本次demo使用input输入框；
+调整组件Student.js，增加一个输入框，用来调整当前行的数据内容
+```js
+Student.js
+    import React from  'react'
+    function Student(props){
+        return <div>
+                    <p onClick={props.onChangeGrade}>大家好，我是{props.name}，班级：{props.class}。{props.children}</p>     
+                    {/*增加输入框，增加外层传入的事件*/}
+                    <input type="text" onChange={props.onGradeChanged}/>       
+                </div>
+    }
+    export default Student;
+
+App.js
+  {/*新增方法*/}
+  onGradeChanged= (event)=>{ //在react中，这里的event是SyntheticEvent的实例
+    this.setState({
+      grade:event.target.value
+    })
+  }
+  render() {
+    return (
+      <div className="App">
+        ...
+        {/*在子组件中增加属性 onGradeChanged，传入声明的事件*/}
+        <Student onGradeChanged={this.onGradeChanged} ... />
+        ...
+      </div>
+    );
+  }
+```
+>SyntheticEvent介绍：https://reactjs.org/docs/events.html
+
+这样就可以实现数据的双向绑定，此时在 输入框 中输入的内容就会同步更新在 grade 上。效果如下：
+
+#### ???????????????这里用动图代替??????????????????????????????
+
+# 6.如何在react中使用样式
+方法有2种：
+  1. 通过 import 导入样式
+  2. 在组件中定义样式
+## 6.1 通过import导入样式：
+在Student.js同级目录创建Student.css
+```css
+.showRed {
+    color:red;
+}
+```
+在Student.js中使用该样式
+```js
+Student.js
+  import React from  'react'
+  import './Student.css' //1.引入样式，之后就可以直接使用了，如使用 .showRed
+  function Student(props){
+      return <div>
+                  <p onClick={props.onChangeGrade}>
+                  {/*2.直接使用样式名即可*/}
+                  <span className='showRed'>大家好</span> ，我是{props.name}，班级：{props.class}。{props.children}
+                  </p>     
+                  <input type="text" onChange={props.onGradeChanged} value={props.name}/>       
+              </div>
+  }
+  export default Student;
+```
+## 6.2 在组件中定义样式
+```js
+Student.js
+    import React from  'react'
+    ...
+    //自定义样式
+    var inputStyle = {
+        "fontSize": "20px", //注意对于带"-"的样式，均已camel命名法来代替
+        "border": "1px solid red"
+    }
+    function Student(props){
+        return <div>
+                    ...   
+                    {/*直接使用变量*/}
+                    <input style={inputStyle} type="text" onChange={props.onGradeChanged} value={props.name}/>       
+                </div>
+    }
+    export default Student;
+```
+6.1，6.2 效果图：
+![6.1，6.2效果图](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180719161658883-1256147739.png)
+>对于一些CDN样式资源，则可以直接在index.html中引入
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
