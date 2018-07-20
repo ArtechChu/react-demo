@@ -26,9 +26,7 @@ class App extends Component {
   }
 
   sayHelloTo=(name)=>{
-    
     console.log("hello  " + name);
-    console.log("this: %o " ,this);
   }
 
   onGradeChanged= (event)=>{
@@ -49,11 +47,6 @@ class App extends Component {
       gradeInfo = <h2>Grade:{this.state.grade}</h2>;
     }
 
-    let students = [];
-    this.state.students.forEach((student,index)=>{
-      students.push(<Student sayHelloTo ={this.sayHelloTo} onGradeChanged={this.onGradeChanged} name={student.name} class={student.class} key={index}/>)
-    })
-
     return (
       <div className="App">
         <h1>demo</h1>
@@ -62,7 +55,9 @@ class App extends Component {
       }
 
       {
-        students
+         this.state.students.map(student=>{
+           return <Student sayHelloTo ={this.sayHelloTo} onGradeChanged={this.onGradeChanged} name={student.name} class={student.class} key={student.name}/>
+         })
       }
       <div><button onClick={()=>this.toggleGrade()} >button</button></div>
       </div>

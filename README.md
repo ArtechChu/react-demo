@@ -2,10 +2,9 @@
 
 > react 官网：https://reactjs.org/
 >
-> 先决条件：安装nodejs，[官网](https://nodejs.org/en/)
->
+> 本次教程从上到下贯穿，如果发现代码有跳跃的，请对照上下文
+> 
 > 本次教程基于环境、使用工具以及版本：
->
 > - *nodejs：8.11.3*
 > - *react：16.4.1*
 > - *npm：6.2.0*
@@ -548,7 +547,7 @@ Student.js
       }
       export default Student;
 ```
-### 7.2.1 方法一：通过数组
+### 7.2.1 方法一：通过for/foreach
 ```js
 class App extends Component {
   state = {
@@ -570,7 +569,7 @@ class App extends Component {
   render() {
     {/*定义一个数组，用来存放Student组件，之后直接渲染*/}
     let students = [];
-    this.state.students.forEach((student,index)=>{
+    this.state.students.forEach((student,index)=>{ {/*这个地方亦可以使用for循环*/}
       students.push(<Student sayHelloTo ={this.sayHelloTo} onGradeChanged={this.onGradeChanged} name={student.name} class={student.class} key={index}/>)
     })
 
@@ -586,9 +585,50 @@ class App extends Component {
   }
 }
 ```
-### 7.2.2 方法二：使用map方法
+### 7.2.2 方法二：使用map方法遍历输出
+直接在JSX中通过花括号写表达式
 ```js
+class App extends Component {
+  state = {
+    students: [
+      { name: "学生A", class: "class_1" },
+      { name: "学生B", class: "class_4" },
+      { name: "学生C", class: "class_3" }
+    ],
+    grade: "Grade One",
+    showGradeInfo:true
+  }
+
+  sayHelloTo=(name)=>{    
+    console.log("hello  " + name);
+  }
+
+  ...
+  
+  render() {
+    ...
+    return (
+      <div className="App">
+      ...
+      {
+        {/*直接通过map函数进行渲染*/}
+         this.state.students.map(student=>{
+           return <Student sayHelloTo ={this.sayHelloTo} onGradeChanged={this.onGradeChanged} name={student.name} class={student.class} key={student.name}/>
+         })
+      }
+      ...
+      </div>
+    );
+  }
+}
 ```
+
+
+
+
+
+
+
 
 
 >临时存放【在讲生命周期的时候用】：
