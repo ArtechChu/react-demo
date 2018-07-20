@@ -527,10 +527,68 @@ class App extends Component {
 >   当然这里可以直接用上面定义的gradeInfo变量。
 > Tips：个人建议在JSX中尽量少业务逻辑，只放结果，将判断逻辑都抽取到JSX外层，也便于后期提取方法
 
+## 7.2 循环语句：本次演示两种方式
+调整App.js对于Student组件的使用，使之可以根据state.students循环输出Student组件。
+调整Student.js
+```js
+Student.js
+      import React from  'react'
+      import './Student.css'
+      var inputStyle = {
+          "fontSize": "20px",
+          "border": "1px solid red"
+      }
+      function Student(props){
+          return <div>
+                      <p onClick={()=>props.sayHelloTo(props.name)}>
+                      <span className={'showRed'}>大家好</span> ，我是{props.name}，班级：{props.class}。{props.children}
+                      </p>     
+                      <input style={inputStyle} type="text" onChange={props.onGradeChanged} defaultValue={props.name}/>       
+                  </div>
+      }
+      export default Student;
+```
+### 7.2.1 方法一：通过数组
+```js
+class App extends Component {
+  state = {
+    students: [
+      { name: "学生A", class: "class_1" },
+      { name: "学生B", class: "class_4" },
+      { name: "学生C", class: "class_3" }
+    ],
+    grade: "Grade One",
+    showGradeInfo:true
+  }
 
+  sayHelloTo=(name)=>{    
+    console.log("hello  " + name);
+  }
 
+  ...
+  
+  render() {
+    {/*定义一个数组，用来存放Student组件，之后直接渲染*/}
+    let students = [];
+    this.state.students.forEach((student,index)=>{
+      students.push(<Student sayHelloTo ={this.sayHelloTo} onGradeChanged={this.onGradeChanged} name={student.name} class={student.class} key={index}/>)
+    })
 
-
+    return (
+      <div className="App">
+      ...
+      {
+        students    {/*直接渲染*/}
+      }
+      ...
+      </div>
+    );
+  }
+}
+```
+### 7.2.2 方法二：使用map方法
+```js
+```
 
 
 >临时存放【在讲生命周期的时候用】：

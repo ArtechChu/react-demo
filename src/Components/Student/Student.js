@@ -6,10 +6,10 @@ var inputStyle = {
 }
 function Student(props){
     return <div>
-                <p onClick={props.onChangeGrade}>
+                <p onClick={()=>props.sayHelloTo(props.name)}>
                 <span className={'showRed'}>大家好</span> ，我是{props.name}，班级：{props.class}。{props.children}
                 </p>     
-                <input style={inputStyle} type="text" onChange={props.onGradeChanged} value={props.name}/>       
+                <input style={inputStyle} type="text" onChange={props.onGradeChanged} defaultValue={props.name}/>       
             </div>
 }
 export default Student;

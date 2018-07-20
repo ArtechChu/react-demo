@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Student from './Components/Student/Student';
 import { hot } from 'react-hot-loader'
-import { PassThrough } from 'stream';
+
 class App extends Component {
 
   state = {
@@ -25,8 +25,10 @@ class App extends Component {
     console.log("hello");
   }
 
-  sayHelloTo(name){
+  sayHelloTo=(name)=>{
+    
     console.log("hello  " + name);
+    console.log("this: %o " ,this);
   }
 
   onGradeChanged= (event)=>{
@@ -39,37 +41,30 @@ class App extends Component {
       showGradeInfo: !this.state.showGradeInfo
     })
   }
+
+
   render() {
     let gradeInfo = null;
     if(this.state.showGradeInfo){
       gradeInfo = <h2>Grade:{this.state.grade}</h2>;
     }
+
+    let students = [];
+    this.state.students.forEach((student,index)=>{
+      students.push(<Student sayHelloTo ={this.sayHelloTo} onGradeChanged={this.onGradeChanged} name={student.name} class={student.class} key={index}/>)
+    })
+
     return (
       <div className="App">
         <h1>demo</h1>
-      {/* 
-      {if(this.state.showGradeInfo){
-          <h2>Grade:{this.state.grade}</h2>
-        }else{
-
-        }} 
-      */}
-
       {
-        this.state.showGradeInfo? <h2>Grade:{this.state.grade}</h2>:null
+        this.state.showGradeInfo?gradeInfo:null
       }
 
-        {/* {
-          gradeInfo
-        } */}
-        
-      
-        <Student onGradeChanged={this.onGradeChanged} name={this.state.students[0].name} class={this.state.students[0].class} />
-        <Student onGradeChanged={this.onGradeChanged} name={this.state.students[1].name} class={this.state.students[1].class} />
-        <Student onGradeChanged={this.onGradeChanged} name={this.state.students[2].name} class={this.state.students[2].class}>
-          <span style={{ color: "red" }}>目前是打酱油的。</span>
-        </Student>
-        <div><button onClick={()=>this.toggleGrade()} >button</button></div>
+      {
+        students
+      }
+      <div><button onClick={()=>this.toggleGrade()} >button</button></div>
       </div>
     );
   }
