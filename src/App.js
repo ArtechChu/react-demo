@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import Student from './Components/Student/Student';
+import Students from './Components/Students/Students';
+import Grade from './Components/Grade/Grade';
 import { hot } from 'react-hot-loader'
 
 class App extends Component {
@@ -44,7 +45,7 @@ class App extends Component {
   render() {
     let gradeInfo = null;
     if(this.state.showGradeInfo){
-      gradeInfo = <h2>Grade:{this.state.grade}</h2>;
+      gradeInfo = <Grade gradeInfo={this.state.grade}/>;
     }
 
     return (
@@ -54,11 +55,8 @@ class App extends Component {
         this.state.showGradeInfo?gradeInfo:null
       }
 
-      {
-         this.state.students.map(student=>{
-           return <Student sayHelloTo ={this.sayHelloTo} onGradeChanged={this.onGradeChanged} name={student.name} class={student.class} key={student.name}/>
-         })
-      }
+      <Students students = {this.state.students} sayHelloTo = {this.sayHelloTo} onGradeChanged = {this.onGradeChanged}/>
+
       <div><button onClick={()=>this.toggleGrade()} >button</button></div>
       </div>
     );
