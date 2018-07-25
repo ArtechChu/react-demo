@@ -674,7 +674,7 @@ App.js
       );
     }
 ```
-## 8.1 两个子组件之间的通信：Grade.js和Student.js
+## 8.1 demo：两个子组件之间的通信：Grade.js和Student.js
 >本次demo功能：点击 学生信息的时候，更新 年级信息
 ```javascript
 Grade.js
