@@ -8,9 +8,9 @@ class App extends Component {
 
   state = {
     students: [
-      { name: "学生A", class: "class_1" },
-      { name: "学生B", class: "class_4" },
-      { name: "学生C", class: "class_3" }
+      { name: "学生A", grade:"Grade one", class: "class_1", id:"1"},
+      { name: "学生B", grade:"Grade one", class: "class_4", id:"2"},
+      { name: "学生C", grade:"Grade Two", class: "class_3", id:"3"}
     ],
     grade: "Grade One",
     showGradeInfo:true
@@ -41,6 +41,22 @@ class App extends Component {
     })
   }
 
+  onStudentNameChanged = (event, id)=>{
+    let students = this.state.students;
+    let student = students.find(ent=>ent.id===id);
+    if(!student) return;
+    student.name = event.target.value;
+    this.setState({
+      students:students
+    });
+  }
+
+  showStudentInfo= (student)=>{
+    this.setState({
+      grade:`${student.name}，来自${student.grade}，班级${student.class}`
+    })
+  }
+
 
   render() {
     let gradeInfo = null;
@@ -55,7 +71,7 @@ class App extends Component {
         this.state.showGradeInfo?gradeInfo:null
       }
 
-      <Students students = {this.state.students} sayHelloTo = {this.sayHelloTo} onGradeChanged = {this.onGradeChanged}/>
+      <Students students = {this.state.students} sayHelloTo = {this.sayHelloTo} onStudentNameChanged = {this.onStudentNameChanged} showStudentInfo={this.showStudentInfo}/>
 
       <div><button onClick={()=>this.toggleGrade()} >button</button></div>
       </div>

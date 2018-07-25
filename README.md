@@ -622,10 +622,101 @@ class App extends Component {
   }
 }
 ```
+# 8.重构项目：将页面通过组件进行渲染
+> 1. 新增Students作为学生列表组件，其内包含Student组件
+> 2. 抽离grade信息到独立的组件中
+> 3. 调整输入框功能为输入的内容替换"学生姓名"
+```javascript
+Student.js
+  function Student(props){
+    return <div>
+                <p onClick={()=>props.sayHelloTo(props.name)}>
+                <span className={'showRed'}>大家好</span> ，我是{props.name}，班级：{props.class}。{props.children}
+                </p>  
+                {/*注意这边传入事件的写法*/}   
+                <input style={inputStyle} type="text" onChange={event=>props.onStudentNameChanged(event, props.id)} defaultValue={props.name}/>       
+            </div>
+  }
+
+Students.js
+  let students = props=>{
+      return props.students.map(student=>{
+          return <Student sayHelloTo ={props.sayHelloTo} onStudentNameChanged={props.onStudentNameChanged} id={student.id} name={student.name} class={student.class} key={student.name}/>
+      })
+  }
+App.js
+    state = {
+      students: [//增加grade和id属性
+        { name: "学生A", grade:"Grade one", class: "class_1", id:"1"},
+        { name: "学生B", grade:"Grade one", class: "class_4", id:"2"},
+        { name: "学生C", grade:"Grade Two", class: "class_3", id:"3"}
+      ],
+      grade: "Grade One",
+      showGradeInfo:true
+    }
+    //新增方法
+    onStudentNameChanged = (event, id)=>{
+      let students = this.state.students;
+      let student = students.find(ent=>ent.id===id);
+      if(!student) return;
+      student.name = event.target.value;
+      this.setState({
+        students:students
+      });
+    }
+    render() {
+    ...
+    return (
+        ...
+        <Students students = {this.state.students} sayHelloTo = {this.sayHelloTo} onStudentNameChanged = {this.onStudentNameChanged}/>
+        ...
+        </div>
+      );
+    }
+```
+## 8.1 两个子组件之间的通信：Grade.js和Student.js
+>本次demo功能：点击 学生信息的时候，更新 年级信息
+```javascript
+Grade.js
+    let grade = props=>{
+        return <h2>Grade:{props.gradeInfo}</h2>
+    }
+
+Student.js
+    function Student(props){
+        return <div>
+                    <p onClick={()=>props.showStudentInfo(props)}>
+                    <span className={'showRed'}>大家好</span> ，我是{props.name}，班级：{props.class}。{props.children}
+                    </p>     
+                    <input 
+                      style={inputStyle} 
+                      type="text" 
+                      onChange={event=>props.onStudentNameChanged(event, props.id)} 
+                      defaultValue={props.name}/>       
+                </div>
+    }
+
+Students.js
+    let students = props=>{
+        return props.students.map(student=>{
+            return <Student 
+                        sayHelloTo ={props.sayHelloTo} 
+                        onStudentNameChanged={props.onStudentNameChanged}
+                        showStudentInfo = {props.showStudentInfo}
+                        id={student.id} 
+                        name={student.name}
+                        class={student.class} 
+                        grade = {student.grade}
+                        key={student.name}/>
+        })
+    }
+App.js
+```
+> Students.js中还有其他子组件，并且需要赋值，这传值复杂度就啧啧了，怎么办？--------> Redux
 
 
-
-
+??????????????演示的时候可以再增加一个功能：删除当前学生信息?????????????????
+??????????????演示的时候可以说明下，传值的时候，可以不用把student的属性都一个一个剥离出来，直接传入整个student对象?????????????????
 
 
 
