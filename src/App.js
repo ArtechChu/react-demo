@@ -3,9 +3,10 @@ import './App.css';
 import Students from './Components/Students/Students';
 import Grade from './Components/Grade/Grade';
 import { hot } from 'react-hot-loader'
-
+// const utils = require('./utils.js');
+import {utils,name as myName} from './utils.js';
 class App extends Component {
-
+  
   state = {
     students: [
       { name: "学生A", grade:"Grade one", class: "class_1", id:"1"},
@@ -59,6 +60,11 @@ class App extends Component {
 
 
   render() {
+    utils.saySth();
+    utils.showSth();
+    console.log(myName);
+    // m.saySth();
+    // m.showSth();
     let gradeInfo = null;
     if(this.state.showGradeInfo){
       gradeInfo = <Grade gradeInfo={this.state.grade}/>;

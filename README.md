@@ -1,5 +1,4 @@
 # 1. React 基础使用demo，based on React.16.4.1
-
 > react 官网：https://reactjs.org/
 >
 > 本次教程从上到下贯穿，如果发现代码有跳跃的，请对照上下文
@@ -87,7 +86,7 @@ JSX语法的一些简单说明：
 
 2. JSX中无法使用 if-else，但可以使用三元表达式来代替，如
 
-   ```js
+   ```javascript
      render() {
        let isDisplayOne = true;
        let one="i am One";
@@ -103,7 +102,7 @@ JSX语法的一些简单说明：
      }
    ```
 3. JSX中，html标签内部的注释需要用花括号括起来，如：
-    ```js
+    ``` javascript
     render() {
       return (
         <div className="App">
@@ -116,7 +115,7 @@ JSX语法的一些简单说明：
     }
     ```
 4. JSX中，使用数组，会将数组中的内容自动按照顺序填充到html标签中，如：
-    ```js
+    ``` js
     render() {
       let arr = [
         <span style={{color:'blue'}}>1.hello</span>,
@@ -134,7 +133,7 @@ JSX语法的一些简单说明：
     ```
     >如果要在jsx中使用内联属性元素，则属性值在赋值的时候需要用双花括号括起来。
 5. 在JSX中，html中的一些元素属性：如class，for，需要使用 className 和 htmlFor 来做代替，如：
-    ```js
+    ``` js
     render() {
       return (
         <div className="App">
@@ -146,7 +145,7 @@ JSX语法的一些简单说明：
     ```
 6.jsx中，属性事件
 - 命名上，类似于camel命名，如：
-```html
+``` html
 <button onClick="XXXXX">button</button>
 这里在定义点击事件的时候，不再是全小写的“onclick”，而是“onClick”--- C 大写
 ```
@@ -425,6 +424,13 @@ App.js
 这样就可以实现数据的双向绑定，此时在 输入框 中输入的内容就会同步更新在 grade 上。效果如下：
 
 #### ???????????????这里用动图代替??????????????????????????????
+
+## 5.5 有状态组件和无状态组件
+### 5.5.1 有状态组件
+>继承Component，且是一个class的js文件，称之为有状态组件
+> state是在Component中定义的
+
+### 5.5.2 无状态组件
 
 # 6.改变元素样式
 方法有2种：
@@ -766,3 +772,4 @@ App.js
 >注意，因为是在App.js引入HMR，所以HMR只对App.js中的代码以及内嵌的组件'们'有效。
 
 ***测试下state是否有状态保持***
+
