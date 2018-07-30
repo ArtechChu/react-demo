@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-let grade = props=>{
-    return <h2>Grade:{props.gradeInfo}</h2>
+class Grade extends Component {
+    render() {
+        return (<h2>Grade: {this.props.gradeInfo}</h2>)
+    }
 }
 
+export default Grade;
 
 
-export default grade;
+
+//以下为无状态组件
+// import React from 'react';
+
+// let grade = props=>{
+//     return <h2>Grade:{props.gradeInfo}</h2>
+// }
+
+// export default grade;

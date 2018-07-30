@@ -426,11 +426,50 @@ App.js
 #### ???????????????这里用动图代替??????????????????????????????
 
 ## 5.5 有状态组件和无状态组件
-### 5.5.1 有状态组件
->继承Component，且是一个class的js文件，称之为有状态组件
-> state是在Component中定义的
+>区别：有状态组件中可以实用state，无状态组件无法使用state
+>有状态组件拥有生命周期函数，而无状态组件没有
 
-### 5.5.2 无状态组件
+### 5.5.1 无状态组件
+>实际上就是个函数
+>使用：通过属性(入参)来实现数据传递：props.YY
+>使用场景：仅仅只是传递数据，那么就用无状态组件----仅渲染
+```javascript
+Grade.js
+    import React from 'react';
+
+    let grade = props=>{
+        return <h2>Grade:{props.gradeInfo}</h2>
+    }
+
+    export default grade;
+```
+
+### 5.5.2 有状态组件
+>继承Component，且是一个class的js文件，这样的，称之为有状态组件
+> state是在Component中定义的。
+> 状态通过父级传递。
+> 使用：通过 this.state.XXX 或者 this.props.YY 来接收状态和属性
+> 使用场景：需要管理状态，或者用到声明周期函数的时候使用。----操作数据
+```javascript
+将 Grade.js改成有状态组件
+    import React, { Component } from 'react';
+
+    class Grade extends Component {
+        render() {
+            return (<h2>Grade: {this.props.gradeInfo}</h2>)
+        }
+    }
+
+    export default Grade;
+```
+
+> React.Component 和 React.PureComponent
+## 5.6 生命周期函数
+
+每一个组件都有好几个生命周期函数。
+
+
+
 
 # 6.改变元素样式
 方法有2种：
@@ -728,8 +767,7 @@ App.js
 
 
 
->临时存放【在讲生命周期的时候用】：
->render方法：只要内容发生变化，该方法都会被执行。
+
 
 
 
