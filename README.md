@@ -445,7 +445,7 @@ Grade.js
 ```
 
 ### 5.5.2 有状态组件
->继承Component，且是一个class的js文件，这样的，称之为有状态组件
+> 继承Component，且是一个class的js文件，这样的，称之为有状态组件
 > state是在Component中定义的。
 > 状态通过父级传递。
 > 使用：通过 this.state.XXX 或者 this.props.YY 来接收状态和属性
