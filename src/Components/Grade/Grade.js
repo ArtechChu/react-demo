@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,PureComponent } from 'react';
 
 class Grade extends Component {
     render() {
@@ -7,7 +7,6 @@ class Grade extends Component {
 }
 
 export default Grade;
-
 
 
 //以下为无状态组件
