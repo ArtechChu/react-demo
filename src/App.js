@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,PureComponent } from 'react';
 import './App.css';
 import Students from './Components/Students/Students';
 import Grade from './Components/Grade/Grade';
@@ -14,7 +14,14 @@ class App extends Component {
       { name: "学生C", grade:"Grade Two", class: "class_3", id:"3"}
     ],
     grade: "Grade One",
-    showGradeInfo:true
+    showGradeInfo:true,
+    teacher:{
+      address:{
+        zipcode:"201600",
+        province:"Shanghai"
+      },
+      name:"Mr.Chu"
+    }
   }
 
   changeGrade= ()=>{
@@ -32,7 +39,7 @@ class App extends Component {
   }
 
   onGradeChanged= (event)=>{
-    this.setState({
+    this.setState({      
       grade:event.target.value
     })
   }
@@ -47,6 +54,8 @@ class App extends Component {
     let student = students.find(ent=>ent.id===id);
     if(!student) return;
     student.name = event.target.value;
+    
+
     this.setState({
       students:students
     });
@@ -57,6 +66,23 @@ class App extends Component {
       grade:`${student.name}，来自${student.grade}，班级${student.class}`
     })
   }
+
+  //对比 Component和PureComponent
+  changeTeachersName=()=>{
+    console.log(this.state);
+    this.setState({
+      teacher:{
+        address:{
+          zipcode:"201600",
+          province:"6666Shanghai"
+        },
+        name:"Mr.Chu"
+      }
+    })
+    console.log("更新后");
+    console.log(this.state);
+  }
+
 
 
   render() {
@@ -75,10 +101,11 @@ class App extends Component {
       {
         this.state.showGradeInfo?gradeInfo:null
       }
-
-      <Students students = {this.state.students} sayHelloTo = {this.sayHelloTo} onStudentNameChanged = {this.onStudentNameChanged} showStudentInfo={this.showStudentInfo}/>
+      <div>老师的邮编为：{this.state.teacher.address.zipcode}</div>
+      <Students teacher={this.state.teacher} students = {this.state.students} sayHelloTo = {this.sayHelloTo} onStudentNameChanged = {this.onStudentNameChanged} showStudentInfo={this.showStudentInfo}/>
 
       <div><button onClick={()=>this.toggleGrade()} >button</button></div>
+      <div><button onClick={()=>this.changeTeachersName()} >changeZipcode</button></div>
       </div>
     );
   }
