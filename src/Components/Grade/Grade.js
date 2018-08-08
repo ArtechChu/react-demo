@@ -1,7 +1,18 @@
-import React, { Component,PureComponent } from 'react';
+import React, { Component, } from 'react';
 
 class Grade extends Component {
+    // constructor(props) {
+    //     super(props);
+    //     console.log("[Grade.js]---->constructor() running.");
+    // }
+    // componentWillMount() {
+    //     console.log("[Grade.js]---->componentWillMount() running.");
+    // }
+    // componentDidMount() {
+    //     console.log("[Grade.js]---->componentDidMount() running.");
+    // }
     render() {
+        console.log("[Grade.js]---->render() running.");
         return (<h2>Grade: {this.props.gradeInfo}</h2>)
     }
 }

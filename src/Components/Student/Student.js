@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from 'react'
+import React, { Component } from 'react'
 import './Student.css'
 var inputStyle = {
     "fontSize": "20px",
@@ -12,8 +12,22 @@ var inputStyle = {
 //                 <input style={inputStyle} type="text" onChange={event=>props.onStudentNameChanged(event, props.id)} defaultValue={props.name}/>       
 //             </div>
 // }
-class Student extends PureComponent {
+class Student extends Component {
+    // constructor(props){
+    //     super(props);
+    //     console.log("[单Student.js]---->constructor() running.");
+    //   }
+    
+    //   componentWillMount(){
+    //     console.log("[单Student.js]---->componentWillMount() running.");
+    //   }
+    //   componentDidMount(){
+    //     console.log("[单Student.js]---->componentDidMount() running.");
+    //   }
+
     render() {
+        // console.log("[单Student.js]---->render() running.");
+
         return (<div>
             <p onClick={() => this.props.showStudentInfo(this.props)}>
                 <span className={'showRed'}>大家好</span> ，我是{this.props.name}，班级：{this.props.class}。{this.props.children}，老师来自：{this.props.teacher.address.province}
@@ -22,11 +36,11 @@ class Student extends PureComponent {
         </div>);
     }
 
-    static getDerivedStateFromProps(props,state) {
-        // This will erase any local state updates!
-        // Do not do this!
-        console.log(111);
-      }
+    // static getDerivedStateFromProps(props,state) {
+    //     // This will erase any local state updates!
+    //     // Do not do this!
+    //     console.log(111);
+    //   }
 
 }
 export default Student;

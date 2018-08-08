@@ -1,12 +1,26 @@
-import React, { Component,PureComponent } from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Students from './Components/Students/Students';
 import Grade from './Components/Grade/Grade';
+import Title from './Components/Title/Title';
 import { hot } from 'react-hot-loader'
 // const utils = require('./utils.js');
-import utils from './utils.js';
+// import utils from './utils.js';
 class App extends Component {
-  
+  constructor(props){
+    super(props);
+    // console.log("[App.js]---->constructor() running.");
+    // this.myRef = React.createRef();
+    // console.log("App ref:%o",this.myRef);
+  }
+
+  // componentWillMount(){
+  //   console.log("[App.js]---->componentWillMount() running.");
+  // }
+  // componentDidMount(){
+  //   console.log("[App.js]---->componentDidMount() running.");
+  // }
+
   state = {
     students: [
       { name: "学生A", grade:"Grade one", class: "class_1", id:"1"},
@@ -69,7 +83,6 @@ class App extends Component {
 
   //对比 Component和PureComponent
   changeTeachersName=()=>{
-    console.log(this.state);
     this.setState({
       teacher:{
         address:{
@@ -79,15 +92,15 @@ class App extends Component {
         name:"Mr.Chu"
       }
     })
-    console.log("更新后");
-    console.log(this.state);
+
   }
 
 
 
   render() {
-    utils.saySth();
-    utils.showSth();
+    // console.log("[App.js]---->render() running.");
+    // utils.saySth();
+    // utils.showSth();
     // m.saySth();
     // m.showSth();
     let gradeInfo = null;
@@ -97,7 +110,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>demo</h1>
+        <Title />
       {
         this.state.showGradeInfo?gradeInfo:null
       }
