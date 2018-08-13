@@ -1,3 +1,4 @@
+[TOC]
 # 1. React 基础使用demo，based on React.16.4.1
 > react 官网：https://reactjs.org/
 >
@@ -465,10 +466,248 @@ Grade.js
 
 > React.Component 和 React.PureComponent
 ## 5.6 生命周期函数
+>- 每一个组件都有好几个生命周期函数。
+>- ***只有有状态组件才有生命周期函数。***
+>- 生命周期函数有的只运行依次，有的是持续运行的。
 
-每一个组件都有好几个生命周期函数。
+![生命周期流程图，见onedrive.KD.VISIOS文件夹](https://images2018.cnblogs.com/blog/1101407/201808/1101407-20180806155629520-909648410.jpg)
 
 
+### 创建流程：
+- constructor：ES6方法
+    - 在mount之前被触发；
+    - 不是React提供的方法，而是ES6提供的方法；
+    - 如果实现了构造函数，则必须要调用super(props)，否则props在构造函数中会是undefined（这是个bug）
+        - 不能再构造函数中调用 this.setState()，而是直接给this.state赋值（也仅有再构造函数中可以给this.state直接赋值）
+    - 一般在构造函数中进行方法的绑定和state的初始化（换句话说如果不绑定方法，也不初始化state，那么这个方法可以不用实现。）
+        ```javascript
+        constructor(props) {
+              super(props);
+              // Don't call this.setState() here!
+              this.state = { counter: 0 };
+              this.handleClick = this.handleClick.bind(this);
+        }
+        ```
+        - 不要在构造函数中进行订阅事件操作（订阅相关的可以放到componentDidUpdate()方法中）。
+        - 不能将props中的值赋值给state，如以下是错误的：
+            ```javascript
+            constructor(props) {
+                 super(props);
+                 // 不要这么做，另外也没有意义，可以直接使用this.state和this.props
+                 this.state = { color: props.color };
+            }
+            ```
+    
+
+- componentWillMount：React方法
+    - 组件即将要开始生成的时候；
+    - eg：移动端的一些启动页：可以在这个钩子函数中设计一些逻辑，修改一些状态，让启动页启动起来。
+
+- render：React方法
+    - 创建虚拟DOM，将JSX解析成ES5等浏览器识别的代码。
+    - 同时也会加载所有子组件。
+
+- componentDidMount：React方法
+    - 组件渲染完毕后执行
+    - 一般的，如果你要从远端获取加载数据，那么这个方法中适合进行网络请求。
+    - 同样，这个方法同样适合进行一些订阅。（当然，不要忘记在componentWillMount中进行"取消订阅"的操作。）
+    - P.S.在这个方法中，不要setState()，这个有可能会触发一次额外的渲染（在浏览器更新屏幕前渲染--由此确保虽然更新了两次，但对于用户来说是无缝的，不会让用户看到中间状态）。
+        - 在这里设置setState()会导致性能问题
+        - 设置状态一般放到构造函数中进行处理。
+
+### 更新流程
+- static getDerivedStateFromProps(props, state)：
+    - 在调用render()之前调用（无论是第一次加载还是后续的更新中）。
+    - 应当返回一个 object以更新 state，或者返回null表示不更新。
+    - 该方法在每次被渲染时就会被执行（同componentWillReceiveProps不同--componentWillReceiveProps只在父级更新时才会被触发（即本地state更新不会触发该方法））
+    - 该方法没有权限访问Component实例，所以如果要使用这个方法的话，自定义组件需要继承自PureComponent，而非Component
+- componentWillReceiveProps(nextProps)：【弃用】组件发生改变触发
+- getSnapshotBeforeUpdate(prevProps, prevState)：在最近的更改被提交到DOM元素之前被触发，组件可以通过该方法在更改之前获得当前值，此函数返回的值都会传给componentDidUpdate()
+    - 该方法返回null或者一个对象
+    - 通过该方法可以实现类似于延迟加载的功能（当X/Y轴滚动到某一位置的时候，可能会触发一些业务代码，从而可以在该方法中返回一个对象供componentDidUpdate调用）
+- shouldComponentUpdate(nextProps, nextState)：控制组件是否重新渲染
+    - 默认为true：只要state更新，就会重新渲染。大多数情况下，保持默认即可。
+    - 初始渲染时，该方法不会被执行。
+    - 如果使用了forceUpdate()，则该方法也将无效。
+    - 该方法主要用于性能优化，不要将此方法用于阻断渲染，可能会出现异常。
+    - 如果返回false，则不会阻碍该组件的子组件在它们(子组件)的state发生更新时进行重新渲染(子组件重新渲染)。
+    - 目前(16.4.2)，如果返回false，则UNSAFE_componentWillUpdate()，render()以及componentDidUpdate()都将不会被触发。【未来，React可能会调整该方法：无论是否返回false，都可以更新组件】
+    - 如果要自定义这个方法，一般比较this.props和nextProps，this.state和nextState，以此来告诉React跳过更新。
+    - 不推荐深层次比较或者使用JSON.stringify来进行比较，会相当影响性能。（可以使用PureComponet）
+- componentWillUpdate(nextProp, nextState)：【弃用】，存在安全隐患
+    - 不能再该方法中调用 this.setState()。
+    - 在该方法返回之前，你也不能调用Redux等操作进行组件的更新。
+    - 此方法可以被componentDidUpdate替换，如果在这个方法中进行了诸如保存滚动位置的操作，则这些操作的逻辑可以移动到getSnapshotBeforeUpdate()中
+    - 如果shouldComponentUpdate()返沪ifalse，则该方法不会被触发
+- render()
+- 更新与当前相关的子组件
+- componentDidUpdate(prevProps, prevState, snapshot)：组件更新后将会触发该方法的执行
+    - 一般在这个方法中通过比较相应的值，来判断是否需要进行一次网络请求。
+    - 在这个方法中可以进行 setState，但是要注意，务必外层是if条件判断，否则会引起死循环和性能问题。
+    - 如果要获取第三个入参snapshot的值，则需要实现 getSnapshotBeforeUpdate()，否则该值为undefined。
+    - 如果shouldComponentUpdate()方法返回的是false，则componentDidUpdate将不会被触发。
+
+
+### 卸载流程
+- componentWillUnmount：
+    - 在组件卸载或销毁前进行触发
+    - 在这个方法中，一般进行一些清理操作，诸如：清理timer，取消网络请求，清除在componentDidMount()中进行的订阅
+    - 不应调用setState()方法，因为此时组件将再也不可能再次渲染。
+    - 一旦组件被卸载，那么该组件再也不可能再加载。
+    
+### 其他生命周期函数
+- componentDidCatch(error, info)：捕获子组件任何地方的js错误
+    - 捕获的是constructor()、rendering()期间，生命周期函数中的异常错误。
+    - 如果class组件定义了这个方法，那么组件自身将成为"错误边界"，在该方法中调用setState方法将能够让你捕获其下树种未处理的js错误并且显示一个回调UI。
+    - 仅使用错误边界来从异常中恢复，不要用于控制流。
+- setState()：设置方法
+    - 通过该方法来更新state，以此来告诉React需要将该组件以及该组件的子组件们进行重新渲染。
+    - 这是用来更新用户界面以响应事件处理程序的和服务器响应的主要方法。
+    - 应将该方法视为“request” 而不是立即更新组件的"命令"。为了获得更好的性能，React可能会延迟该方法的执行，然后再一次更新中同时更新几个组件
+    - React不保证立即更改应用的state。
+        - 所以在调用setState()之后立即调用this.state会是一个潜在的问题。
+            - 但可以通过componetDidUpdate或者setState的回调函数
+            setState(updaterFun, fallback)来保证APP在setState之后，state的值被更新。
+                - updaterFun的签名：(prefState, props)=>stateChange，eg：
+                ```javascript
+                this.setState((prevState,props)=>{
+                    return {counter:prevState.counter+props.step};
+                })
+                ```
+                - fallback：在设置后被执行"一"次
+                - 一般情况下，不要这么干，用componentDidUpdate来代替实现。
+    - 只要调用setState，就必然会导致重新渲染（除非shouldComponentUpdate返回false），不管setState的对象是否有变动，都会重新渲染，所以需要结合shouldComponentUpdate方法一起调用。
+    
+- forceUpdate(callback)：如果一些数据(非state和props)更新也需要让页面渲染，那么可以执行这个方法
+    - 将无视 shouldComponentUpdate()方法。包括子组件的shouldComponentUpdate()方法。
+    - 一般情况下，不调用这个方法来重新渲染，而是依赖this.state和this.props
+
+### class属性
+- defaultProps：可以给class自己定义一个默认属性，如：
+    ```javascript
+    class CustomButton extends React.Component {
+      // ...
+    }
+    
+    CustomButton.defaultProps = {
+      color: 'blue'
+    };
+    ```
+    - 如果此时props.color没有定义/传值赋予，那么默认将为 blue
+
+- displayName
+    - 用于debug，一般情况下不用设置，忽略即可
+
+### 实例属性
+- props：由调用者声明。
+- state：用户定义的state，包含特定于此组件的数据，该数据可能会随时间而变化，应该是一个简单对象
+    - 如果一些属性不是用来渲染数据流的，那么就不应该将这些属性放到state中，而是直接以字段(fields)存放在组件中。
+
+    
+### 生命周期函数demo
+``` javascript
+App.js （需要确保是有状态组件）
+constructor(){
+    super();
+}
+
+或者
+
+constructor(props){ //构造函数会自动接收props属性，所以可以直接这么些
+    super(props);//必须要写，否则胡i爆粗o
+}
+
+componentWillMount(){ //可以在这个方法中修改state
+    console.log("[App.js]---->componentWillMount() running.");
+}
+render(){//渲染页面（加载JSX语法）
+    console.log("[App.js]---->render() running.");
+}
+componentDidMount(){
+    console.log("[App.js]---->componentDidMount() running.");
+}
+```
+单个组件生命周期函数执行顺序:
+![生命周期函数执行顺序](https://images2018.cnblogs.com/blog/1101407/201808/1101407-20180806140806914-2008224126.png)
+
+多个组件嵌套情况下函数执行顺序：
+```js
+Students.js
+class Students extends Component{
+    constructor(props){
+      super(props);
+      console.log("[Students.js]---->constructor() running.");
+    }
+    
+    componentWillMount(){
+      console.log("[Students.js]---->componentWillMount() running.");
+    }
+    componentDidMount(){
+      console.log("[Students.js]---->componentDidMount() running.");
+    }
+
+    render(){
+        console.log("[Students.js]---->render() running.");
+		...
+    }
+}
+```
+```js
+Student.js
+    class Student extends Component {
+        constructor(props){
+          super(props);
+          console.log("[单Student.js]---->constructor() running.");
+        }
+        
+        componentWillMount(){
+          console.log("[单Student.js]---->componentWillMount() running.");
+        }
+        componentDidMount(){
+          console.log("[单Student.js]---->componentDidMount() running.");
+        }
+    
+        render() {
+            console.log("[单Student.js]---->render() running.");
+            ...
+        }
+    }
+```
+![多个组件嵌套情况下函数执行顺序](https://images2018.cnblogs.com/blog/1101407/201808/1101407-20180806142442476-376313379.png)
+
+只要有任一组件更新，那么都会从父级开始，依次重新渲染每一个组件
+> 当props更改时，需要响应一个操作，如获取数据或者进行动画，建议使用componentDidUpdate
+> 当props更改时，需要重新计算一些数据，建议使用memoize-one
+> 当props更改时，需要重置一些state，建议使用完全可控/完全不可控--通过key的组件
+
+### 可控组件 和 不可控组件
+- 可控组件：组件中的state遵守了“单一数据源原则”，那么就可以认为组件是可控的。
+    - 所谓可控就是说state中定义的属性，其数据来源只有一个地方【如某一个输入元素(input)】。
+    - 符合上面这条的组件，就认为是可控组件。
+    - 对于受控组件而言，每一次state的更新都会伴有相关联的处理函数
+- 不可控组件：通过props从外部传入的值，被组件内部的state管理着(即数据由DOM自己处理)，这样的组件成为不可控组件，如下面例子
+```javascript
+class EmailInput extends Component {
+  state = { email: this.props.defaultEmail };//组件内部的state管理通过props从外部传入的defaultEmail属性
+
+  handleChange = event => {
+    this.setState({ email: event.target.value });
+  };
+
+  render() {
+    //使用this.state.email而非this.props.defaultEmail
+    return <input onChange={this.handleChange} value={this.state.email} />;
+  }
+}
+//对于这样的代码，当第一次渲染完成后，将会忽略后续props的更新
+//为了解决这个问题，需要引入 “key”这个属性，这个时候只要key的值更新了，那么对应的组件就会重新渲染。方法：
+<EmailInput
+  defaultEmail={this.props.user.email}
+  key={this.props.user.id}
+/>
+//只要id的值变了，EmailInput这个组件就会被重新渲染（此时state也会被重置成最新的defaultEmail这个属性所拥有的值。）
+//这里可以再改进下：将key放在外层的form上更好，这样不用form内的每个组件都添加key属性，只要key更新了，那么form内的组件都会重新创建。
+```
 
 
 # 6.改变元素样式
@@ -755,7 +994,6 @@ Students.js
                         key={student.name}/>
         })
     }
-App.js
 ```
 > Students.js中还有其他子组件，并且需要赋值，这传值复杂度就啧啧了，怎么办？--------> Redux
 
@@ -811,3 +1049,40 @@ App.js
 
 ***测试下state是否有状态保持***
 
+## refs
+> 一般情况下，props是父组件和子组件交互的唯一方式。但是在某些情况下，需要强制修改子项，这个时候就可以用refs。
+- React提供的ref属性，表示为对组件真正实例的引用，实质就是ReactDOM.render()返回的组件实例。需要注意的是：
+    - ReactDOM.render() 渲染组件时返回的是组件实例对象；
+    - ReactDOM.render() 渲染DOM元素时，返回的是具体的DOM节点。
+- 什么时候使用refs？
+    - 管理focus，text-selection，或者媒体回放的时候；
+    - 触发某些一定会执行的动画；
+    - 与第三方DOM库集成的死后。
+- 不要过度使用Refs：
+- 使用说明：
+    - **创建：** Refs通过React.createRef()创建，并通过ref属性附加到React元素。在构造组件时，通常将Refs分配给实例属性，以便可以在整个组件中引用它们，如下：
+    ```javascript
+    class MyComponent extends React.Component {
+          constructor(props) {
+            super(props);
+            //创建
+            this.myRef = React.createRef();
+          }
+          render() {
+            //使用
+            return <div ref={this.myRef} />;
+          }
+    }
+    ```
+    - **访问Refs：** ：当在render方法中使用ref属性之后，可以通过 ref.current属性进行访问，如
+    ```javascript
+    const node = this.myRef.current;
+    ```
+        - 如果ref属性被用于HTML元素，则在构造函数中通过React.createRef()创建的ref对象的current属性为该HTML元素
+        - 如果ref属性被用于自定义的class组件，则ref对象的current属性为加载的组件自身
+        - ref属性不能被用于函数组件（因为函数组件没有实例）
+- 其他说明：
+    - 当组件被加载的时候，DOM元素将被React分配给current属性。
+    - 当组件被卸载的时候，current属性将被赋值为null。
+    - ref的更新在 componentDidMount 或 componentDidUpdate之前。
+        
