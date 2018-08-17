@@ -6,13 +6,13 @@
 > 
 > 本次教程基于环境、使用工具以及版本：
 > - *nodejs：8.11.3*
-> - *react：16.4.1*
+> - *react：16.4.2*
 > - *npm：6.2.0*
 > - *SPA（单页应用）*
 
 # 2. 创建项目
 
-## 2.1. 安装 create-react-app
+## 2.1. 安装脚手架：create-react-app
 
 ```shell
 npm install -g create-react-app@2.0.0-next.3e165448
@@ -46,7 +46,7 @@ create-react-app react-demo
 
     ![解包后入口文件配置](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180716143041900-1455397530.png)
 
-    
+> 运行eject解包命令后，会删除一些已经安装的包，此时需要重新运行npm install 进行安装
 
 - src文件夹：
 
@@ -54,6 +54,8 @@ create-react-app react-demo
 
   ![index.js](https://images2018.cnblogs.com/blog/1101407/201807/1101407-20180713144814373-1366441329.png)
 
+  >ReactDOM.render是react最基本的方法，用于将模板转换为HTML语言，并插入到指定的DOM节点。
+  >像上面的代码的意思就是把App这个组件转换成html后插入到root节点中
   >在这里，可以将 \<App /> 认为是整个项目的根组件，要使用App组件，需要引入该组件，见L4（第四行）：通过  ***import App from './App'***  进行引用，默认情况下，webpack自动将文件作为js文件进行处理，所以这里在引入App.js的时候，不用显示指明 "./App.js"
 
   
@@ -144,6 +146,7 @@ JSX语法的一些简单说明：
       );
     }
     ```
+
 6.jsx中，属性事件
 - 命名上，类似于camel命名，如：
 ``` html

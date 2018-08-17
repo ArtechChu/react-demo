@@ -10,4 +10,8 @@ const utils = {
 // export {utils};
 // export var m = utils;       // 方式1
 // export {utils};             // 方式2
-export default utils;  // 方式3
+export  {utils};  // 方式3
+
+// module.exports = utils;
+
+// export default  utils;

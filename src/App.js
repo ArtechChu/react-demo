@@ -6,9 +6,13 @@ import Title from './Components/Title/Title';
 import { hot } from 'react-hot-loader'
 // const utils = require('./utils.js');
 // import utils from './utils.js';
+
+import {utils} from './Utils';
+
 class App extends Component {
   constructor(props){
     super(props);
+    console.log("test: "+utils.saySth());
     // console.log("[App.js]---->constructor() running.");
     // this.myRef = React.createRef();
     // console.log("App ref:%o",this.myRef);
